@@ -14,7 +14,6 @@ def create_transaction():
         receiver_id=data['receiver_id'],
         amount=data['amount'],
         description=data['description'],
-        # You may have more fields to include here
     )
     db.session.add(new_transaction)
     db.session.commit()
@@ -39,7 +38,7 @@ def update_transaction(transaction_id):
     data = request.json
     transaction.amount = data['amount']
     transaction.description = data['description']
-    # Add more fields as necessary
+
     db.session.commit()
     return jsonify(transaction.to_dict())
 
@@ -56,7 +55,7 @@ def delete_transaction(transaction_id):
 def approve_transaction(transaction_id):
     transaction = Transaction.query.get_or_404(transaction_id)
     transaction.approved = True
-    # Add any additional logic for approval
+
     db.session.commit()
     return jsonify(transaction.to_dict())
 
@@ -67,6 +66,4 @@ def get_user_transactions(user_id):
     transactions_received = Transaction.query.filter_by(receiver_id=user_id).all()
     transactions = transactions_sent + transactions_received
     return jsonify([transaction.to_dict() for transaction in transactions])
-
-# Other routes specific to your business logic could be added here
 
