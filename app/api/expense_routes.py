@@ -18,10 +18,10 @@ def create_and_split_expense():
         status='pending'
     )
     db.session.add(new_expense)
-    db.session.flush()  # This allows us to use the new_expense.id before committing
+    db.session.flush()  
 
-    # Split the expense and create UserExpense entries for each user including the creator
-    user_ids = data['user_ids']  # List of user IDs to split the expense with, including the current user
+    #Split the expense
+    user_ids = data['user_ids']
     split_amount = new_expense.total_amount // len(user_ids)
 
     for user_id in user_ids:
@@ -79,3 +79,9 @@ def delete_expense(expense_id):
     db.session.delete(expense)
     db.session.commit()
     return jsonify(message="Expense deleted")
+
+@expense_routes.route('/')
+@login_required
+def get_all_expenses():
+    expenses = Expense.query.all()
+    return jsonify([expense.to_dict() for expense in expenses])

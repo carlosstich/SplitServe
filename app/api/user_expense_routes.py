@@ -14,14 +14,14 @@ def pay_user_expense(user_expense_id):
     data = request.json
     payment_amount = data['payment_amount']
 
-    # Check if the user making the request is the one associated with the UserExpense record
+    # Check if the user making the request is the one associated with the User Expense record
     if user_expense.user_id != current_user.id:
         return jsonify(error="You do not have permission to perform this action."), 403
 
     user_expense.paid_amount += payment_amount
     user_expense.updated_at = datetime.utcnow()
 
-    # Check if the user has fully paid their share
+
     if user_expense.paid_amount >= user_expense.expense.total_amount // 2:
         user_expense.is_settled = True
 
@@ -55,3 +55,17 @@ def delete_user_from_expense(user_expense_id):
     db.session.delete(user_expense)
     db.session.commit()
     return jsonify(message="User removed from expense")
+
+#get all expenses
+@user_expense_routes.route('/', methods=['GET'])
+@login_required
+def get_all_expenses():
+    user_expenses = UserExpense.query.all()
+    return jsonify([user_expense.to_dict() for user_expense in user_expenses]), 200
+
+#get all expenses for current user
+@user_expense_routes.route('/user', methods=['GET'])
+@login_required
+def get_all_user_expenses():
+    user_expenses = UserExpense.query.filter(UserExpense.user_id == current_user.id).all()
+    return jsonify([user_expense.to_dict() for user_expense in user_expenses]), 200

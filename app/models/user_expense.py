@@ -1,4 +1,4 @@
-from .db import db, SCHEMA, environment
+from .db import db, SCHEMA, environment, add_prefix_for_prod
 
 class UserExpense(db.Model):
     __tablename__ = 'user_expenses'
@@ -7,8 +7,8 @@ class UserExpense(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.users.id'), nullable=False)
-    expense_id = db.Column(db.Integer, db.ForeignKey(f'{SCHEMA}.expenses.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
+    expense_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("expenses.id")), nullable=False)
     paid_amount = db.Column(db.Integer)
     is_settled = db.Column(db.Boolean)
     updated_at = db.Column(db.DateTime)

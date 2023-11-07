@@ -8,12 +8,27 @@ def seed_users():
         username='Demo', email='demo@aa.io', password='password')
     marnie = User(
         username='marnie', email='marnie@aa.io', password='password')
-    bobbie = User(
-        username='bobbie', email='bobbie@aa.io', password='password')
+    bobbie = User(username='bobbie', email='bobbie@aa.io', password='password')
+    chuck = User(username='chuck', email='chuck@aa.io', password='password')
+    alex = User(username='alex', email='alex@aa.io', password='password')
+    mike = User(username='mike', email='mike@aa.io', password='password')
+    joe = User(username='joe', email='joe@aa.io', password='password')
+    steve = User(username='steve', email='steve@aa.io', password='password')
+    beegle = User(username='beegle', email='beegle@aa.io', password='password')
+    mayu = User(username='mayu', email='mayu@aa.io', password='password')
+    ozzy = User(username='ozzy', email='ozzy@aa.io', password='password')
 
     db.session.add(demo)
     db.session.add(marnie)
     db.session.add(bobbie)
+    db.session.add(chuck)
+    db.session.add(alex)
+    db.session.add(mike)
+    db.session.add(joe)
+    db.session.add(steve)
+    db.session.add(beegle)
+    db.session.add(mayu)
+    db.session.add(ozzy)
     db.session.commit()
 
 
@@ -28,5 +43,5 @@ def undo_users():
         db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
     else:
         db.session.execute(text("DELETE FROM users"))
-        
+
     db.session.commit()

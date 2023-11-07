@@ -19,6 +19,80 @@ def create_transaction():
     db.session.commit()
     return jsonify(new_transaction.to_dict()), 201
 
+from app.models import UserExpense, Transaction
+
+@transaction_routes.route('/create-with-approval', methods=['POST'])
+@login_required
+def create_transaction_with_approval():
+    data = request.json
+
+    new_transaction = Transaction(
+        sender_id=current_user.id,
+        receiver_id=data['receiver_id'],
+        amount=data['amount'],
+        description=data['description'],
+        approved=False
+    )
+    db.session.add(new_transaction)
+    db.session.commit()
+    return jsonify(new_transaction.to_dict()), 201
+
+
+@transaction_routes.route('/<int:transaction_id>/approve', methods=['POST'])
+@login_required
+def approve_transaction_and_update_expense(transaction_id):
+    transaction = Transaction.query.get_or_404(transaction_id)
+
+    # Only the receiverto approve the transaction
+    if current_user.id != transaction.receiver_id:
+        return jsonify({'message': 'You are not authorized to approve this transaction'}), 403
+
+    transaction.approved = True
+    db.session.commit()
+
+    # Find the  user expense
+    user_expense = UserExpense.query.filter_by(
+        user_id=transaction.sender_id,
+        expense_id=transaction.expense_id  
+    ).first()
+
+    if not user_expense:
+        return jsonify({'message': 'User expense not found'}), 404
+
+    # Update the user expense paid amount
+    user_expense.paid_amount += transaction.amount
+
+    # Check if the updated paid amount covers the original debt
+    if user_expense.paid_amount >= user_expense.original_debt:
+        user_expense.is_settled = True
+
+    try:
+        db.session.commit()
+        return jsonify({
+            'transaction': transaction.to_dict(),
+            'user_expense': user_expense.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Transaction could not be approved', 'error': str(e)}), 500
+
+#get all the transactions that the current user can approval
+@transaction_routes.route('/approvals_waiting')
+@login_required
+def get_approvals():
+
+    approvals = Transaction.query.filter_by(receiver_id=current_user.id, approved=False).all()
+    approval_dicts = [approval.to_dict() for approval in approvals]
+    return jsonify(approval_dicts), 200
+
+# get all the tranaction the current user has waiting for a approval
+@transaction_routes.route('/transactions-waiting-for-approval')
+@login_required
+def get_sent():
+    payments = Transaction.query.filter_by(sender_id=current_user.id, approved=False).all()
+    payments_dicts = [payment.to_dict() for payment in payments]
+    return jsonify(payments_dicts), 200
+
 @transaction_routes.route('/')
 @login_required
 def get_transactions():
@@ -31,6 +105,7 @@ def get_transaction(transaction_id):
     transaction = Transaction.query.get_or_404(transaction_id)
     return jsonify(transaction.to_dict())
 
+#update
 @transaction_routes.route('/<int:transaction_id>', methods=['PUT'])
 @login_required
 def update_transaction(transaction_id):
@@ -66,4 +141,3 @@ def get_user_transactions(user_id):
     transactions_received = Transaction.query.filter_by(receiver_id=user_id).all()
     transactions = transactions_sent + transactions_received
     return jsonify([transaction.to_dict() for transaction in transactions])
-
