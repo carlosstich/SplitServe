@@ -17,7 +17,7 @@ class Transaction(db.Model):
     status = db.Column(db.String)
     approved = db.Column(db.Boolean, default=False)
     type = db.Column(db.String)
-    user_expense_id = db.Column(db.Integer, db.ForeignKey('user_expenses.id'))
+    user_expense_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('user_expenses.id')))
 
 
 
