@@ -18,15 +18,6 @@ def validation_errors_to_error_messages(validation_errors):
     return errorMessages
 
 
-@auth_routes.route('/')
-def authenticate():
-    """
-    Authenticates a user.
-    """
-    if current_user.is_authenticated:
-        return current_user.to_dict()
-    return {'errors': ['Unauthorized']}
-
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
@@ -80,3 +71,14 @@ def unauthorized():
     Returns unauthorized JSON when flask-login authentication fails
     """
     return {'errors': ['Unauthorized']}, 401
+
+@auth_routes.route('/')
+def authenticate():
+    """
+    Authenticates a user.
+    """
+    if current_user.is_authenticated:
+        return current_user.to_dict()
+    return {'errors': ['Unauthorized']}
+
+
