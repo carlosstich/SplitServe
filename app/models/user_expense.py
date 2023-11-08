@@ -10,6 +10,7 @@ class UserExpense(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("users.id")), nullable=False)
     expense_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod("expenses.id")), nullable=False)
     paid_amount = db.Column(db.Integer)
+    original_debt_amount = db.Column(db.Integer)
     is_settled = db.Column(db.Boolean)
     updated_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -20,6 +21,7 @@ class UserExpense(db.Model):
             'user_id': self.user_id,
             'expense_id': self.expense_id,
             'paid_amount': self.paid_amount,
+            'original_debt_amount': self.original_debt_amount, 
             'is_settled': self.is_settled,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
             'created_at': self.created_at.isoformat() if self.created_at else None,

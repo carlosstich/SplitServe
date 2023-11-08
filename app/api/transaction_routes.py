@@ -5,19 +5,6 @@ from app import db
 
 transaction_routes = Blueprint('transactions', __name__, url_prefix='/api/transactions')
 
-@transaction_routes.route('/', methods=['POST'])
-@login_required
-def create_transaction():
-    data = request.json
-    new_transaction = Transaction(
-        sender_id=data['sender_id'],
-        receiver_id=data['receiver_id'],
-        amount=data['amount'],
-        description=data['description'],
-    )
-    db.session.add(new_transaction)
-    db.session.commit()
-    return jsonify(new_transaction.to_dict()), 201
 
 from app.models import UserExpense, Transaction
 
@@ -53,7 +40,7 @@ def approve_transaction_and_update_expense(transaction_id):
     # Find the  user expense
     user_expense = UserExpense.query.filter_by(
         user_id=transaction.sender_id,
-        expense_id=transaction.expense_id  
+        expense_id=transaction.user_expense_id
     ).first()
 
     if not user_expense:
@@ -63,7 +50,7 @@ def approve_transaction_and_update_expense(transaction_id):
     user_expense.paid_amount += transaction.amount
 
     # Check if the updated paid amount covers the original debt
-    if user_expense.paid_amount >= user_expense.original_debt:
+    if user_expense.paid_amount >= user_expense.original_debt_amount:
         user_expense.is_settled = True
 
     try:
@@ -99,6 +86,7 @@ def get_transactions():
     transactions = Transaction.query.all()
     return jsonify([transaction.to_dict() for transaction in transactions])
 
+#get a transaction by id
 @transaction_routes.route('/<int:transaction_id>')
 @login_required
 def get_transaction(transaction_id):
@@ -141,3 +129,19 @@ def get_user_transactions(user_id):
     transactions_received = Transaction.query.filter_by(receiver_id=user_id).all()
     transactions = transactions_sent + transactions_received
     return jsonify([transaction.to_dict() for transaction in transactions])
+
+@transaction_routes.route('/', methods=['POST'])
+@login_required
+def create_transaction():
+    data = request.json
+    new_transaction = Transaction(
+        sender_id=data['sender_id'],
+        receiver_id=data['receiver_id'],
+        amount=data['amount'],
+        description=data['description'],
+        type=data['type'],
+        user_expense_id=data['user_expense_id']
+    )
+    db.session.add(new_transaction)
+    db.session.commit()
+    return jsonify(new_transaction.to_dict()), 201

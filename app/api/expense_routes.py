@@ -18,26 +18,33 @@ def create_and_split_expense():
         status='pending'
     )
     db.session.add(new_expense)
-    db.session.flush()  
+    db.session.flush()  # Flush to get the new_expense.id for foreign key references
 
-    #Split the expense
+    # Split the expense
     user_ids = data['user_ids']
     split_amount = new_expense.total_amount // len(user_ids)
 
+    user_expenses = []  # To store user_expense objects for JSON response
     for user_id in user_ids:
+        # Calculate the original debt for each user
+        original_debt = split_amount if user_id != current_user.id else new_expense.total_amount - split_amount * (len(user_ids) - 1)
+
         user_expense = UserExpense(
             user_id=user_id,
             expense_id=new_expense.id,
             paid_amount=0 if user_id != current_user.id else split_amount,
+            original_debt_amount=original_debt,
             is_settled=False,
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow()
         )
         db.session.add(user_expense)
+        user_expenses.append(user_expense)
 
     db.session.commit()
-    return jsonify([user_expense.to_dict() for user_expense in UserExpense.query.filter(UserExpense.expense_id == new_expense.id).all()]), 201
 
+
+    return jsonify([ue.to_dict() for ue in user_expenses]), 201
 
 # Get all expenses for the current user
 @expense_routes.route('/user')

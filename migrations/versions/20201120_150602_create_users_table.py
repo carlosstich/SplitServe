@@ -56,6 +56,7 @@ def upgrade():
     sa.Column('is_settled', sa.Boolean(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.func.current_timestamp(), nullable=False),
+    sa.Column('original_debt_amount', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
 

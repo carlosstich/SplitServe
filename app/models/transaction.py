@@ -39,5 +39,5 @@ class Transaction(db.Model):
             'status': self.status,
             'approved': self.approved,
             'type': self.type,
-            'user_expense_id': self.type,
+            'user_expense_id': self.user_expense_id,
         }
