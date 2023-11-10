@@ -51,7 +51,7 @@ def create_and_split_expense():
 @login_required
 def get_user_expenses():
     expenses = Expense.query.filter(Expense.created_by == current_user.id).all()
-    return jsonify([expense.to_dict() for expense in expenses])
+    return jsonify({'user_expenses': [expense.to_dict() for expense in expenses]})
 
 # Get a single expense by id
 @expense_routes.route('/<int:expense_id>')
