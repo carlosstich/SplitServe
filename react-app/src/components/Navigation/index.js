@@ -14,10 +14,12 @@ function Navigation({ isLoaded }){
         openModal(<LoginFormModal />);
     };
 
+    const logoLinkPath = sessionUser ? "/dashboard" : "/";
+
     return (
         <ul className="navbar">
             <li>
-                <NavLink exact to="/">
+                <NavLink exact to={logoLinkPath}>
                     <img src="/images/bg-primary.png" alt="SplitServe Logo" style={{ height: '50px' }} />
                     SplitServe
                 </NavLink>
@@ -37,5 +39,6 @@ function Navigation({ isLoaded }){
         </ul>
     );
 }
+
 
 export default Navigation;
