@@ -2,10 +2,17 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
+import { useModal } from '../../context/Modal';
+import LoginFormModal from '../LoginFormModal';
 import './Navigation.css';
 
 function Navigation({ isLoaded }){
     const sessionUser = useSelector(state => state.session.user);
+    const { openModal } = useModal();
+
+    const openLoginForm = () => {
+        openModal(<LoginFormModal />);
+    };
 
     return (
         <ul className="navbar">
@@ -17,9 +24,9 @@ function Navigation({ isLoaded }){
             </li>
             {isLoaded && !sessionUser && (
                 <li className="right">
-                    <NavLink to="/login" className="sign-in-btn">
+                    <button onClick={openLoginForm} className="sign-in-btn">
                         Sign In
-                    </NavLink>
+                    </button>
                 </li>
             )}
             {isLoaded && sessionUser && (
