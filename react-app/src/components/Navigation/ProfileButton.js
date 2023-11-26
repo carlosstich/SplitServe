@@ -4,48 +4,53 @@ import { logout } from "../../store/session";
 import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import './ProfileButton.css';
+
+
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const history = useHistory();
 
-  const openMenu = () => {
-    if (showMenu) return;
-    setShowMenu(true);
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setShowMenu(prevShowMenu => !prevShowMenu);
   };
 
   useEffect(() => {
-    if (!showMenu) return;
-
     const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
+      if (ulRef.current && !ulRef.current.contains(e.target)) {
         setShowMenu(false);
       }
     };
 
     document.addEventListener("click", closeMenu);
-
     return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
+  }, []);
 
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
+    history.push('/');
   };
 
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
-  const closeMenu = () => setShowMenu(false);
+  const ulClassName = `profile-dropdown ${showMenu ? "" : "hidden"}`;
 
   return (
     <>
-      <button onClick={openMenu}>
+      <button onClick={toggleMenu}>
         <i className="fas fa-user-circle" />
+        <FontAwesomeIcon icon={showMenu ? faChevronUp : faChevronDown} />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
+            <li>Hello, {user.username}</li>
             <li>{user.email}</li>
             <li>
               <button onClick={handleLogout}>Log Out</button>
@@ -55,13 +60,12 @@ function ProfileButton({ user }) {
           <>
             <OpenModalButton
               buttonText="Log In"
-              onItemClick={closeMenu}
+              onItemClick={toggleMenu}
               modalComponent={<LoginFormModal />}
             />
-
             <OpenModalButton
               buttonText="Sign Up"
-              onItemClick={closeMenu}
+              onItemClick={toggleMenu}
               modalComponent={<SignupFormModal />}
             />
           </>

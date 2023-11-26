@@ -46,12 +46,23 @@ def create_and_split_expense():
 
     return jsonify([ue.to_dict() for ue in user_expenses]), 201
 
-# Get all expenses for the current user
+
+
+
 @expense_routes.route('/user')
 @login_required
 def get_user_expenses():
-    expenses = Expense.query.filter(Expense.created_by == current_user.id).all()
-    return jsonify({'user_expenses': [expense.to_dict() for expense in expenses]})
+    created_expenses = Expense.query.filter(Expense.created_by == current_user.id)
+    involved_expenses = Expense.query.join(UserExpense, UserExpense.expense_id == Expense.id).filter(UserExpense.user_id == current_user.id)
+
+    all_expenses = created_expenses.union(involved_expenses).all()
+
+    return jsonify({'user_expenses': [expense.to_dict() for expense in all_expenses]})
+
+
+
+
+
 
 # Get a single expense by id
 @expense_routes.route('/<int:expense_id>')
