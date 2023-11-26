@@ -47,6 +47,8 @@ export const createTransactionThunk = (transactionData) => async (dispatch) => {
     if (response.ok) {
         const data = await response.json();
         dispatch(createTransactionAction(data));
+        
+
     }
 };
 

@@ -5,7 +5,6 @@ import "./CreateExpenseModal.css";
 
 function CreateExpenseModal({ closeModal }) {
   const dispatch = useDispatch();
-
   const [totalAmount, setTotalAmount] = useState('');
   const [description, setDescription] = useState('');
   const [userIds, setUserIds] = useState([]);
@@ -13,9 +12,8 @@ function CreateExpenseModal({ closeModal }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!description || totalAmount <= 0 || userIds.length < 2) {
-      setErrorMessage("Just enter two userid devided by commas.");
+    if (!description || totalAmount <= 0 || userIds.length === 0) {
+      setErrorMessage("Please enter a valid description, total amount, and at least one user ID.");
       return;
     }
 
@@ -38,7 +36,6 @@ function CreateExpenseModal({ closeModal }) {
     setUserIds(ids.map(Number));
   };
 
-  //close modal if clicked outside of it
   const handleBackdropClick = (e) => {
     if (e.target.id === "modal-backdrop") {
       closeModal();
@@ -46,47 +43,46 @@ function CreateExpenseModal({ closeModal }) {
   };
 
   return (
-    <>
-      <div id="modal-backdrop" className="modal-backdrop" onClick={handleBackdropClick}></div>
-      <div className="modal-container">
-        <div className="create-expense-modal">
-          <button className="modal-close-button" onClick={closeModal}>&times;</button>
-          <div className="title-container">
-            <p className="title">Create New Expense</p>
-          </div>
-          <form onSubmit={handleSubmit}>
-            <label>
-              Description:
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
-            </label>
-            <label>
-              Total Amount:
-              <input
-                type="number"
-                value={totalAmount}
-                onChange={(e) => setTotalAmount(e.target.value)}
-                required
-              />
-            </label>
-            <label>
-              User IDs (comma-separated):
-              <input
+    <div id="modal-backdrop" className="modal-backdrop" onClick={handleBackdropClick}>
+      <div className="create-expense-modal">
+        <div className="modal-header">
+          <span className="modal-title">Add an bill</span>
+          <button onClick={closeModal} className="close-button">&times;</button>
+        </div>
+        <form onSubmit={handleSubmit} className="expense-form">
+          <div className="input-group">
+            <label>With you and:</label>
+            <input
                 type="text"
                 onChange={handleUserIdsChange}
                 required
                 placeholder="1,2"
-              />
-            </label>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <button type="submit">Create Expense</button>
-          </form>
-        </div>
+            />
+          </div>
+          <div className="input-group">
+            <label>Enter a description:</label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          <div className="input-group">
+            <label>Amount:</label>
+            <input
+              type="text"
+              value={totalAmount}
+              onChange={(e) => setTotalAmount(e.target.value)}
+              placeholder="$0.00"
+            />
+          </div>
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+          <div className="form-footer">
+            <button type="submit" className="save-button">Save</button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
 
