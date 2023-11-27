@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { fetchUserExpensesForExpense } from '../../store/userexpenses';
+import { fetchUserExpensesForExpense, fetchUsersForExpense } from '../../store/userexpenses';
 import {
     approveTransactionThunk,
     getTransactionsAwaitingApprovalThunk,
-    getUserTransactionsThunk
+    getUserTransactionsThunk,
+    getTransactionsForExpenseThunk
 } from '../../store/transactions';
 import './ExpenseDetailPage.css';
 import AddTransactionModal from '../AddTransactionModal';
@@ -16,6 +17,7 @@ function ExpenseDetailPage() {
     const dispatch = useDispatch();
     const userId = useSelector(state => state.session.user?.id);
     const userExpenses = useSelector(state => state.userexpenses.userExpensesForExpense || []);
+    const usersForExpense = useSelector(state => state.userexpenses.usersForExpense || []);
     const transactionsAwaitingApproval = useSelector(state => state.transactions.transactionsAwaitingApproval || []);
     const userTransactions = useSelector(state => state.transactions.userTransactions || []);
 
@@ -25,21 +27,34 @@ function ExpenseDetailPage() {
 
     const { openModal } = useModal();
 
+    const refreshTransactions = () => {
+        dispatch(getTransactionsForExpenseThunk(expenseId));
+    };
+
     useEffect(() => {
         dispatch(fetchUserExpensesForExpense(expenseId));
+        dispatch(fetchUsersForExpense(expenseId));
         dispatch(getTransactionsAwaitingApprovalThunk());
-        dispatch(getUserTransactionsThunk(userId));
+        dispatch(getTransactionsForExpenseThunk(expenseId)); 
     }, [dispatch, expenseId, userId]);
+
+
+    const getUsername = (userId) => {
+        const user = usersForExpense.find(user => user.id === userId);
+        return user ? user.username : 'Unknown';
+    };
 
     const handleOpenAddTransactionModal = () => {
         openModal(
             <AddTransactionModal
                 userId={userId}
+                users={usersForExpense}
                 expenseId={expenseId}
-                onTransactionSubmit={() => dispatch(getTransactionsAwaitingApprovalThunk())}
+                onTransactionSubmit={refreshTransactions}
             />
         );
     };
+
 
 
     const handleApproveTransaction = (transactionId) => {
@@ -52,13 +67,11 @@ function ExpenseDetailPage() {
             });
     };
 
-
-
     return (
         <div className="expense-detail-container">
             {currentUserExpense && otherUserExpense ? (
                 <div className="expense-summary">
-                    <div>Total amount of the expense: ${total.toFixed(2)}</div>
+                    <div>Original expense total: ${total.toFixed(2)}</div>
                     <div>You have paid: ${currentUserExpense.paid_amount.toFixed(2)}</div>
                     <div>Other User Paid: ${otherUserExpense.paid_amount.toFixed(2)}</div>
                     <div>Other User Owes: ${(otherUserExpense.original_debt_amount - otherUserExpense.paid_amount).toFixed(2)}</div>
@@ -73,10 +86,15 @@ function ExpenseDetailPage() {
                 <h3>Transactions awaiting your approval</h3>
                 {transactionsAwaitingApproval.map(transaction => (
                     <div key={transaction.id} className="transaction">
+                        <div>{getUsername(transaction.sender_id)} is suggesting a transaction</div>
                         <div>Amount: ${transaction.amount}</div>
-                        <div>Sender ID: {transaction.sender_id}</div>
-                        <div>Receiver ID: {transaction.receiver_id}</div>
+                        <div>Transaction type: {transaction.type}</div>
+                        <div>Transaction note: {transaction.description}</div>
+                        <br></br>
+                        {/* <div>Approver: {getUsername(transaction.receiver_id)}</div> */}
                         <button onClick={() => handleApproveTransaction(transaction.id)}>Approve</button>
+                        <br></br>
+                        <br></br>
                     </div>
                 ))}
             </div>
@@ -87,7 +105,7 @@ function ExpenseDetailPage() {
                     <div key={transaction.id} className="transaction">
                         <div>Amount: ${transaction.amount}</div>
                         <div>Description: {transaction.description}</div>
-                        <div>Status: {transaction.approved}</div>
+                        <div>Status: {transaction.approved ? 'Approved' : 'Pending'}</div>
                         <br />
                     </div>
                 ))}

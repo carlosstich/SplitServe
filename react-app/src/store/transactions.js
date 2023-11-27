@@ -4,6 +4,7 @@ const GET_TRANSACTIONS_AWAITING_APPROVAL = 'transactions/GET_TRANSACTIONS_AWAITI
 const GET_USER_TRANSACTIONS = 'transactions/GET_USER_TRANSACTIONS';
 const UPDATE_TRANSACTION = 'transactions/UPDATE_TRANSACTION';
 const DELETE_TRANSACTION = 'transactions/DELETE_TRANSACTION';
+const GET_TRANSACTIONS_FOR_EXPENSE = 'transactions/GET_TRANSACTIONS_FOR_EXPENSE';
 
 const createTransactionAction = (transaction) => ({
     type: CREATE_TRANSACTION,
@@ -47,10 +48,15 @@ export const createTransactionThunk = (transactionData) => async (dispatch) => {
     if (response.ok) {
         const data = await response.json();
         dispatch(createTransactionAction(data));
-        
+
 
     }
 };
+
+const getTransactionsForExpenseAction = (transactions) => ({
+    type: GET_TRANSACTIONS_FOR_EXPENSE,
+    payload: transactions,
+});
 
 export const approveTransactionThunk = (transactionId) => async (dispatch) => {
     const response = await fetch(`/api/transactions/${transactionId}/approve`, {
@@ -109,6 +115,18 @@ export const deleteTransactionThunk = (transactionId) => async (dispatch) => {
     }
 };
 
+export const getTransactionsForExpenseThunk = (expenseId) => async (dispatch) => {
+    const response = await fetch(`/api/transactions/expense/${expenseId}`);
+
+    if (response.ok) {
+        const data = await response.json();
+        dispatch(getTransactionsForExpenseAction(data));
+    } else {
+        // Handle error case
+        console.error('Failed to fetch transactions for the expense');
+    }
+};
+
 
 const initialState = {
     createdTransaction: {},
@@ -132,6 +150,11 @@ export default function transactionsReducer(state = initialState, action) {
                 transaction.id === action.payload.id ? action.payload : transaction
             );
             return { ...state, userTransactions: updatedTransactions };
+            case GET_TRANSACTIONS_FOR_EXPENSE:
+                return {
+                    ...state,
+                    userTransactions: action.payload
+                };
         case DELETE_TRANSACTION:
             const filteredTransactions = state.userTransactions.filter(transaction =>
                 transaction.id !== action.payload
