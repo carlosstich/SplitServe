@@ -1,21 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { createTransactionThunk } from "../../store/transactions";
 import { useModal } from "../../context/Modal";
 import "./AddTransactionModal.css";
 
-function AddTransactionModal({ userId, expenseId, onTransactionSubmit }) {
+function AddTransactionModal({ userId, users, expenseId, onTransactionSubmit }) {
     const dispatch = useDispatch();
     const { closeModal } = useModal();
 
+    // Find the other user's details
+    const otherUser = users.find(user => user.id !== userId) || {};
+
     const [transactionFormData, setTransactionFormData] = useState({
         sender_id: userId,
-        receiver_id: '',
+        receiver_id: otherUser.id || '',
         amount: '',
         description: '',
-        type: '', 
+        type: '',
         user_expense_id: expenseId
     });
+
+    useEffect(() => {
+        setTransactionFormData(formData => ({ ...formData, receiver_id: otherUser.id }));
+    }, [otherUser]);
 
     const handleInputChange = (e) => {
         setTransactionFormData({ ...transactionFormData, [e.target.name]: e.target.value });
@@ -30,16 +37,14 @@ function AddTransactionModal({ userId, expenseId, onTransactionSubmit }) {
         }
     };
 
+
     return (
         <div className="add-transaction-modal">
             <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="receiver_id"
-                    value={transactionFormData.receiver_id}
-                    onChange={handleInputChange}
-                    placeholder="Receiver ID"
-                />
+                <div>
+                    <label>Approver:</label>
+                    <span>{otherUser.username || 'Unknown'}</span>
+                </div>
                 <input
                     type="number"
                     name="amount"

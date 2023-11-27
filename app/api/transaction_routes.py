@@ -130,6 +130,13 @@ def get_user_transactions(user_id):
     transactions = transactions_sent + transactions_received
     return jsonify([transaction.to_dict() for transaction in transactions])
 
+@transaction_routes.route('/expense/<int:expense_id>')
+@login_required
+def get_transactions_by_expense(expense_id):
+    transactions = Transaction.query.filter_by(user_expense_id=expense_id).all()
+    return jsonify([transaction.to_dict() for transaction in transactions]), 200
+
+
 @transaction_routes.route('/', methods=['POST'])
 @login_required
 def create_transaction():

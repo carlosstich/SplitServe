@@ -28,6 +28,7 @@ class Transaction(db.Model):
     'UserExpense',
     backref='related_transactions',
     overlaps="transactions"  
+)
 
 
 

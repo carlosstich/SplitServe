@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import UserExpense, Expense
+from app.models import UserExpense, Expense, User
 from app import db
 from datetime import datetime
 
@@ -46,6 +46,20 @@ def update_user_expense(user_expense_id):
     user_expense.is_settled = data['is_settled']
     db.session.commit()
     return jsonify(user_expense.to_dict())
+
+@user_expense_routes.route('/expense/<int:expense_id>/users', methods=['GET'])
+@login_required
+def get_users_for_expense(expense_id):
+    user_expenses = UserExpense.query.filter(UserExpense.expense_id == expense_id).all()
+    users = []
+
+    for user_expense in user_expenses:
+        user = User.query.get(user_expense.user_id)
+        if user:
+            users.append(user.to_dict())
+
+    return jsonify(users)
+
 
 # Delete a user from an expense
 @user_expense_routes.route('/<int:user_expense_id>', methods=['DELETE'])

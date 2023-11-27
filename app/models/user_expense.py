@@ -19,7 +19,7 @@ class UserExpense(db.Model):
     'Transaction',
     cascade='all, delete-orphan',
     backref='related_user_expense',
-    overlaps="related_user_expense,related_transactions"  # Add this line
+    overlaps="related_user_expense,related_transactions"  
 )
 
 
