@@ -1,5 +1,6 @@
 const SET_USER = "session/SET_USER";
 const REMOVE_USER = "session/REMOVE_USER";
+const GET_ALL_USERS = 'users/GET_ALL_USERS';
 
 const setUser = (user) => ({
 	type: SET_USER,
@@ -9,8 +10,13 @@ const setUser = (user) => ({
 const removeUser = () => ({
 	type: REMOVE_USER,
 });
+const getAllUsersAction = (users) => ({
+    type: GET_ALL_USERS,
+    payload: users
+});
 
-const initialState = { user: null };
+
+
 
 export const authenticate = () => async (dispatch) => {
 	const response = await fetch("/api/auth/", {
@@ -92,6 +98,26 @@ export const signUp = (username, email, password) => async (dispatch) => {
 		return ["An error occurred. Please try again."];
 	}
 };
+export const fetchAllUsersThunk = () => async (dispatch) => {
+    const response = await fetch('/api/users/', {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        dispatch(getAllUsersAction(data.users));
+    } else {
+        console.error("Failed to fetch users");
+    }
+};
+
+
+const initialState = {
+	user: null,
+	allUsers: [],
+  };
 
 export default function reducer(state = initialState, action) {
 	switch (action.type) {
@@ -99,6 +125,11 @@ export default function reducer(state = initialState, action) {
 			return { user: action.payload };
 		case REMOVE_USER:
 			return { user: null };
+			case GET_ALL_USERS:
+				return {
+					...state,
+					allUsers: action.payload
+				};
 		default:
 			return state;
 	}
