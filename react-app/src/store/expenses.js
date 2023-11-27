@@ -50,6 +50,7 @@ export const createExpenseThunk = (expenseData) => async (dispatch) => {
     if (response.ok) {
         const data = await response.json();
         dispatch(createExpense(data));
+        dispatch(getExpensesThunk())
         return data;
     } else {
         return null;

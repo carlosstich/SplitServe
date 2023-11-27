@@ -16,6 +16,11 @@ class Expense(db.Model):
 
 
     creator = db.relationship('User', backref='expenses_created')
+    user_expenses = db.relationship(
+        'UserExpense',
+        cascade='all, delete-orphan',  
+        backref='expense',
+    )
 
     def to_dict(self):
         return {

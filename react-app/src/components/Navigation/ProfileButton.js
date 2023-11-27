@@ -7,21 +7,22 @@ import SignupFormModal from "../SignupFormModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import './ProfileButton.css';
+
+
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
-  const history = useHistory()
+  const history = useHistory();
 
-  const openMenu = () => {
-    if (showMenu) return;
-    setShowMenu(true);
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setShowMenu(prevShowMenu => !prevShowMenu);
   };
 
   useEffect(() => {
-    if (!showMenu) return;
-
     const closeMenu = (e) => {
       if (ulRef.current && !ulRef.current.contains(e.target)) {
         setShowMenu(false);
@@ -29,24 +30,22 @@ function ProfileButton({ user }) {
     };
 
     document.addEventListener("click", closeMenu);
-
     return () => document.removeEventListener("click", closeMenu);
-  }, [showMenu]);
+  }, []);
 
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
-    history.push('/')
+    history.push('/');
   };
 
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
-  const arrowIcon = showMenu ? faChevronUp : faChevronDown;
+  const ulClassName = `profile-dropdown ${showMenu ? "" : "hidden"}`;
 
   return (
     <>
-      <button onClick={openMenu}>
+      <button onClick={toggleMenu}>
         <i className="fas fa-user-circle" />
-        <FontAwesomeIcon icon={arrowIcon} className={`arrow-icon ${showMenu ? "arrow-up" : "arrow-down"}`} />
+        <FontAwesomeIcon icon={showMenu ? faChevronUp : faChevronDown} />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
@@ -61,12 +60,12 @@ function ProfileButton({ user }) {
           <>
             <OpenModalButton
               buttonText="Log In"
-              onItemClick={() => setShowMenu(false)}
+              onItemClick={toggleMenu}
               modalComponent={<LoginFormModal />}
             />
             <OpenModalButton
               buttonText="Sign Up"
-              onItemClick={() => setShowMenu(false)}
+              onItemClick={toggleMenu}
               modalComponent={<SignupFormModal />}
             />
           </>

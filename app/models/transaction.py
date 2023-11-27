@@ -24,7 +24,13 @@ class Transaction(db.Model):
     sender = db.relationship('User', foreign_keys=[sender_id], backref='transactions_sent')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='transactions_received')
     approver = db.relationship('User', foreign_keys=[approver_id], backref='transactions_approved')
-    user_expense = db.relationship('UserExpense', backref='transactions')
+    user_expense = db.relationship(
+    'UserExpense',
+    backref='related_transactions',
+    overlaps="transactions"  
+)
+
+
 
     def to_dict(self):
         return {
