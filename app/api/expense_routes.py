@@ -80,11 +80,17 @@ def update_expense(expense_id):
         return jsonify(message="Not authorized to update this expense"), 403
 
     data = request.json
-    expense.total_amount = data['total_amount']
-    expense.description = data['description']
-    expense.status = data['status']
+
+    if 'total_amount' in data:
+        expense.total_amount = data['total_amount']
+    if 'description' in data:
+        expense.description = data['description']
+    if 'status' in data:
+        expense.status = data['status']
+
     db.session.commit()
     return jsonify(expense.to_dict())
+
 
 # Delete an expense
 @expense_routes.route('/<int:expense_id>', methods=['DELETE'])
