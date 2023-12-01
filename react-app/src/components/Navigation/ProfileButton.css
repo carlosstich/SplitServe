@@ -1,77 +1,78 @@
-.profile-dropdown.hidden {
-    display: none;
-  }
+.profile-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
 
+.profile-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.profile-name {
+  margin-right: 8px;
+}
+
+.profile-dropdown.hidden {
+  display: none;
+}
 
 .profile-dropdown {
-    position: absolute;
-    right: 0;
-    background-color: white;
-    border: 1px solid #e1e1e1;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: 200px;
-    text-align: left;
-    z-index: 1000;
-  }
+  position: absolute;
+  right: 0;
+  background-color: white;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 200px;
+  text-align: left;
+  z-index: 1000;
+}
 
-  .profile-dropdown::before {
-    content: "";
-    position: absolute;
-    top: -6px;
-    right: 14px;
-    border-width: 6px;
-    border-style: solid;
-    border-color: transparent transparent white transparent;
-  }
+.profile-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 14px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
 
-  .profile-dropdown li {
-    padding: 8px 12px;
-    list-style-type: none;
-  }
+.profile-dropdown li {
+  padding: 8px 12px;
+  list-style-type: none;
+}
 
-  .profile-dropdown li:hover {
-    background-color: #f2f2f2;
-  }
+.profile-dropdown li:hover {
+  background-color: #f2f2f2;
+}
 
-  .profile-dropdown li:not(:last-child) {
-    border-bottom: 1px solid #e1e1e1;
-  }
+.profile-dropdown li:not(:last-child) {
+  border-bottom: 1px solid #e1e1e1;
+}
 
-  .profile-dropdown button {
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
+.profile-dropdown button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  cursor: pointer;
+}
 
-  .profile-dropdown button:hover {
-    background-color: #f2f2f2;
-  }
+.profile-dropdown button:hover {
+  background-color: #f2f2f2;
+}
 
-  .profile-dropdown .username::before {
-    content: "\f2bd";
-    font-family: "Font Awesome 5 Free";
-    padding-right: 8px;
-  }
+.profile-dropdown.hidden {
+  display: none;
+}
 
-  .profile-dropdown .username::before {
-    font-size: 16px;
-    color: #4b4f56;
-  }
-
-  .profile-dropdown .menu-title {
-    font-weight: bold;
-    color: #4b4f56;
-    pointer-events: none;
-  }
-
-  .profile-dropdown.hidden {
-    display: none;
-  }
-
-  .profile-dropdown:not(.hidden) {
-    display: block;
-  }
+.profile-dropdown:not(.hidden) {
+  display: block;
+}

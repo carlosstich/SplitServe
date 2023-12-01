@@ -1,73 +1,83 @@
+.expense-list-container {
+  width: 100%;
+  margin: auto;
+  position: relative;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+}
+
+.expense-list-header {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.expense-list-title {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.create-expense-button {
+  padding: 10px 20px;
+  background-color: #ff652f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.create-expense-button:hover {
+  background-color: #cc5200;
+}
+
 .expenses-list {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
 
-  .expense-item {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
+.expense-item {
+  background-color: #fff;
+  border-bottom: 1px solid #e7e7e7;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+}
 
-  .expense-link {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-grow: 1;
-  }
+.expense-date {
+  font-size: 0.9rem;
+  color: #888;
+  margin-right: 10px;
+}
 
-  .expense-description {
-    font-size: 1rem;
-    font-weight: 500;
-  }
+.expense-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+}
 
-  .expense-amount {
-    font-size: 0.9rem;
-    color: #333;
-    margin-left: auto;
-  }
+.expense-description {
+  font-size: 1rem;
+  font-weight: 500;
+}
 
-  .delete-expense-button {
-    background: none;
-    border: none;
-    color: #e74c3c;
-    cursor: pointer;
-    font-size: 1.5rem;
-    margin-left: 1rem;
-  }
+.expense-amount {
+  font-size: 0.9rem;
+  color: #333;
+  margin-left: auto;
+}
 
-
-  .expense-item {
-    padding: 10px 40px 10px 20px;
-  }
-
-  .delete-expense-button {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-  }
-
-  @media (max-width: 768px) {
-    .expenses-list {
-      width: 100%;
-    }
-
-    .expense-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .expense-amount,
-    .delete-expense-button {
-      align-self: flex-end;
-    }
-  }
+.delete-expense-button {
+  background: none;
+  border: none;
+  color: #d9534f;
+  cursor: pointer;
+  font-size: 1.5rem;
+}

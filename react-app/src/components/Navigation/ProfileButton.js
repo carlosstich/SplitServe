@@ -9,8 +9,6 @@ import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import './ProfileButton.css';
 
-
-
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
@@ -43,14 +41,14 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <i className="fas fa-user-circle" />
+      <button onClick={toggleMenu} className="profile-button">
+        <img src="/images/avatar-ruby5-100px.png" alt="Profile" className="profile-avatar" />
+        {user && <span className="profile-name">{user.username}</span>}
         <FontAwesomeIcon icon={showMenu ? faChevronUp : faChevronDown} />
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>Hello, {user.username}</li>
             <li>{user.email}</li>
             <li>
               <button onClick={handleLogout}>Log Out</button>
