@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchUserExpensesForExpense, fetchUsersForExpense } from '../../store/userexpenses';
+import { getExpensesThunk, updateExpenseThunk } from '../../store/expenses';
 import {
   approveTransactionThunk,
   getTransactionsAwaitingApprovalThunk,
@@ -9,18 +10,21 @@ import {
   getTransactionsForExpenseThunk
 } from '../../store/transactions';
 import './ExpenseDetailPage.css';
-import AddTransactionModal from '../AddTransactionModal';
+import UpdateTransactionModal from '../UpdateTransactionModal';
 import { useModal } from '../../context/Modal';
+import AddTransactionModal from '../AddTransactionModal';
 
 function ExpenseDetailPage() {
   const { expenseId } = useParams();
   const dispatch = useDispatch();
   const userId = useSelector(state => state.session.user?.id);
+  const expenses = useSelector(state => state.expenses.userExpenses || []);
   const userExpenses = useSelector(state => state.userexpenses.userExpensesForExpense || []);
   const usersForExpense = useSelector(state => state.userexpenses.usersForExpense || []);
   const transactionsAwaitingApproval = useSelector(state => state.transactions.transactionsAwaitingApproval || []);
   const userTransactions = useSelector(state => state.transactions.userTransactions || []);
 
+  const expense = expenses.find(e => e.id === parseInt(expenseId));
   const currentUserExpense = userExpenses.find(expense => expense.user_id === userId);
   const otherUserExpense = userExpenses.find(expense => expense.user_id !== userId);
   const total = currentUserExpense && currentUserExpense.original_debt_amount * 2;
@@ -32,6 +36,7 @@ function ExpenseDetailPage() {
   };
 
   useEffect(() => {
+    dispatch(getExpensesThunk());
     dispatch(fetchUserExpensesForExpense(expenseId));
     dispatch(fetchUsersForExpense(expenseId));
     dispatch(getTransactionsAwaitingApprovalThunk());
@@ -54,24 +59,53 @@ function ExpenseDetailPage() {
     );
   };
 
+  const handleOpenUpdateTransactionModal = (transaction) => {
+    openModal(
+      <UpdateTransactionModal
+        transaction={transaction}
+        onTransactionUpdate={refreshTransactions}
+      />
+    );
+  };
+
   const handleApproveTransaction = (transactionId) => {
     dispatch(approveTransactionThunk(transactionId))
       .then(() => {
         dispatch(getTransactionsAwaitingApprovalThunk());
+        dispatch(getUserTransactionsThunk(userId));
+        dispatch(fetchUserExpensesForExpense(expenseId));
       })
       .catch(error => {
         console.error('Error in approving transaction:', error);
       });
   };
 
+  const handleSettleExpense = () => {
+    const updatedExpenseData = {
+        status: 'Settled'
+    };
+
+    dispatch(updateExpenseThunk(expenseId, updatedExpenseData))
+        .then(() => {
+            dispatch(getExpensesThunk());
+        })
+        .catch(error => {
+            console.error('Error in settling expense:', error);
+        });
+  };
+
   return (
     <div className="expense-detail-container">
-      {currentUserExpense && otherUserExpense ? (
+      {currentUserExpense && otherUserExpense && expense ? (
         <div className="expense-summary">
           <div>Original expense total: ${total.toFixed(2)}</div>
           <div>You have paid: ${currentUserExpense.paid_amount.toFixed(2)}</div>
           <div>Other User Paid: ${otherUserExpense.paid_amount.toFixed(2)}</div>
           <div>Other User Owes: ${(otherUserExpense.original_debt_amount - otherUserExpense.paid_amount).toFixed(2)}</div>
+          {expense.created_by === userId && (
+            <button onClick={handleSettleExpense}>Settle Up</button>
+          )}
+          <div>Description: {expense.description}</div>
         </div>
       ) : (
         <div>Loading expense details...</div>
@@ -87,11 +121,7 @@ function ExpenseDetailPage() {
             <div>Amount: ${transaction.amount}</div>
             <div>Transaction type: {transaction.type}</div>
             <div>Transaction note: {transaction.description}</div>
-            <br></br>
-            {/* <div>Approver: {getUsername(transaction.receiver_id)}</div> */}
             <button onClick={() => handleApproveTransaction(transaction.id)}>Approve</button>
-            <br></br>
-            <br></br>
           </div>
         ))}
       </div>
@@ -103,7 +133,11 @@ function ExpenseDetailPage() {
             <div>Amount: ${transaction.amount}</div>
             <div>Description: {transaction.description}</div>
             <div>Status: {transaction.approved ? 'Approved' : 'Pending'}</div>
-            <br />
+            {transaction.sender_id === userId && !transaction.approved && (
+              <button onClick={() => handleOpenUpdateTransactionModal(transaction)}>
+                Update Transaction
+              </button>
+            )}
           </div>
         ))}
       </div>

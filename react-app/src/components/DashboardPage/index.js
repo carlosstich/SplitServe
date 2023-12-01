@@ -19,11 +19,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      {expenses.length > 0 ? (
-        <ExpenseList expenses={expenses} openModal={openModal} />
-      ) : (
-        <p>Loading expenses...</p>
-      )}
+      <ExpenseList expenses={expenses} openModal={openModal} />
       {showModal && <CreateExpenseModal closeModal={closeModal} />}
     </div>
   );
