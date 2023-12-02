@@ -6,13 +6,14 @@ import { getExpensesThunk, updateExpenseThunk } from '../../store/expenses';
 import {
   approveTransactionThunk,
   getTransactionsAwaitingApprovalThunk,
-  getUserTransactionsThunk,
   getTransactionsForExpenseThunk
 } from '../../store/transactions';
 import './ExpenseDetailPage.css';
 import UpdateTransactionModal from '../UpdateTransactionModal';
-import { useModal } from '../../context/Modal';
 import AddTransactionModal from '../AddTransactionModal';
+import ExpenseSummary from './ExpenseSummary'; 
+import AllBillTransactions from './AllBillTransactions';
+import { useModal } from '../../context/Modal';
 
 function ExpenseDetailPage() {
   const { expenseId } = useParams();
@@ -27,7 +28,6 @@ function ExpenseDetailPage() {
   const expense = expenses.find(e => e.id === parseInt(expenseId));
   const currentUserExpense = userExpenses.find(expense => expense.user_id === userId);
   const otherUserExpense = userExpenses.find(expense => expense.user_id !== userId);
-  const total = currentUserExpense && currentUserExpense.original_debt_amount * 2;
 
   const { openModal } = useModal();
 
@@ -72,8 +72,7 @@ function ExpenseDetailPage() {
     dispatch(approveTransactionThunk(transactionId))
       .then(() => {
         dispatch(getTransactionsAwaitingApprovalThunk());
-        dispatch(getUserTransactionsThunk(userId));
-        dispatch(fetchUserExpensesForExpense(expenseId));
+        dispatch(getTransactionsForExpenseThunk(expenseId));
       })
       .catch(error => {
         console.error('Error in approving transaction:', error);
@@ -82,7 +81,7 @@ function ExpenseDetailPage() {
 
   const handleSettleExpense = () => {
     const updatedExpenseData = {
-        status: 'Settled'
+      status: 'Settled'
     };
 
     dispatch(updateExpenseThunk(expenseId, updatedExpenseData))
@@ -96,22 +95,16 @@ function ExpenseDetailPage() {
 
   return (
     <div className="expense-detail-container">
-      {currentUserExpense && otherUserExpense && expense ? (
-        <div className="expense-summary">
-          <div>Original expense total: ${total.toFixed(2)}</div>
-          <div>You have paid: ${currentUserExpense.paid_amount.toFixed(2)}</div>
-          <div>Other User Paid: ${otherUserExpense.paid_amount.toFixed(2)}</div>
-          <div>Other User Owes: ${(otherUserExpense.original_debt_amount - otherUserExpense.paid_amount).toFixed(2)}</div>
-          {expense.created_by === userId && (
-            <button onClick={handleSettleExpense}>Settle Up</button>
-          )}
-          <div>Description: {expense.description}</div>
-        </div>
-      ) : (
-        <div>Loading expense details...</div>
-      )}
+      <ExpenseSummary
+        expense={expense}
+        currentUserExpense={currentUserExpense}
+        otherUserExpense={otherUserExpense}
+        handleSettleExpense={handleSettleExpense}
+      />
 
-      <button onClick={handleOpenAddTransactionModal}>Add Transaction</button>
+      <button onClick={handleOpenAddTransactionModal} className="add-transaction-button">
+        Add Transaction
+      </button>
 
       <div className="transactions-awaiting-approval">
         <h3>Transactions awaiting your approval</h3>
@@ -126,21 +119,11 @@ function ExpenseDetailPage() {
         ))}
       </div>
 
-      <div className="user-transactions">
-        <h3>All Bill Transactions</h3>
-        {userTransactions.map(transaction => (
-          <div key={transaction.id} className="transaction">
-            <div>Amount: ${transaction.amount}</div>
-            <div>Description: {transaction.description}</div>
-            <div>Status: {transaction.approved ? 'Approved' : 'Pending'}</div>
-            {transaction.sender_id === userId && !transaction.approved && (
-              <button onClick={() => handleOpenUpdateTransactionModal(transaction)}>
-                Update Transaction
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
+      <AllBillTransactions
+        userTransactions={userTransactions}
+        handleOpenUpdateTransactionModal={handleOpenUpdateTransactionModal}
+        userId={userId}
+      />
     </div>
   );
 }
