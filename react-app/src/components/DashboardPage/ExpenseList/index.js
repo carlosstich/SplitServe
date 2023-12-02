@@ -5,6 +5,7 @@ import { deleteExpenseThunk } from '../../../store/expenses';
 import UpdateExpenseModal from '../UpdateExpenseModal';
 import { useModal } from '../../../context/Modal';
 import "./ExpenseList.css";
+import CreateExpenseModal from '../../CreateExpenseModal';
 
 
 function formatDate(dateString) {
@@ -18,7 +19,7 @@ function formatDate(dateString) {
 function ExpenseList({ expenses }) {
     const dispatch = useDispatch();
     const currentUserId = useSelector(state => state.session.user.id);
-    const { openModal } = useModal(); 
+    const { openModal } = useModal();
 
     const settledExpenses = expenses.filter(expense => expense.status === 'Settled');
     const unsettledExpenses = expenses.filter(expense => expense.status !== 'Settled');
@@ -55,7 +56,7 @@ function ExpenseList({ expenses }) {
         <div className="expense-list-container">
             <div className="expense-list-header">
                 <h1 className="expense-list-title">Demo's Expenses</h1>
-                <button onClick={() => openModal(<UpdateExpenseModal />)} className="create-expense-button">Add an Expense</button>
+                <button onClick={() => openModal(<CreateExpenseModal />)} className="create-expense-button">Add an Expense</button>
             </div>
             <div className="expenses-list">
                 {unsettledExpenses.map(expense => (
