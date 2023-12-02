@@ -81,3 +81,10 @@
   cursor: pointer;
   font-size: 1.5rem;
 }
+
+.settled-header {
+  background-color: #e7e7e7; /* Gray color */
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
