@@ -9,9 +9,10 @@ body {
   background-color: #f8f8f8;
 }
 
-.expense-detail-container {
+.expense-detail-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
@@ -20,26 +21,28 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.card {
+.expense-detail-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
   background-color: #fff;
-  border: 1px solid #e1e1e1;
   border-radius: 8px;
-  margin-bottom: 20px;
-  padding: 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .card h3 {
-  border-bottom: 1px solid #e1e1e1;
-  padding-bottom: 10px;
+  background-color: #e7e7e7;
+  border-radius: 8px;
+  padding: 10px 20px;
   margin-bottom: 15px;
-  color: #333;
   font-size: 18px;
 }
 
 .transaction, .expense-summary div {
-  color: #333;
-  margin-bottom: 10px;
+  border-bottom: 1px solid #e7e7e7;
+  padding: 10px 0;
   text-align: left;
 }
 
@@ -50,10 +53,8 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  text-align: center;
-  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .add-transaction-button:hover {
@@ -61,20 +62,16 @@ body {
 }
 
 .transactions-awaiting-approval, .user-transactions, .expense-summary {
-  class: card;
+  background-color: #e7e7e7; 
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
-
-.transactions-awaiting-approval, .user-transactions {
-  width: calc(50% - 10px);
-}
-
 
 @media (max-width: 768px) {
+  .expense-detail-header,
   .expense-detail-container {
     width: 95%;
-  }
-
-  .transactions-awaiting-approval, .user-transactions {
-    width: 100%;
+    margin: 20px auto;
   }
 }

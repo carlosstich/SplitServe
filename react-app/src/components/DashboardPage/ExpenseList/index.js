@@ -45,7 +45,7 @@ function ExpenseList({ expenses }) {
             <div className="expense-list-container">
                 <div className="expense-list-header">
                     <h1 className="expense-list-title">Demo's Expenses</h1>
-                    <button onClick={() => openModal(<UpdateExpenseModal />)} className="create-expense-button">Add an Expense</button>
+                    <button onClick={() => openModal(<CreateExpenseModal />)} className="create-expense-button">Add an Expense</button>
                 </div>
                 <p>No expenses found. Start by adding a new expense.</p>
             </div>

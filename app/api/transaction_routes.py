@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import Transaction
 from app import db
+from sqlalchemy import not_
 
 transaction_routes = Blueprint('transactions', __name__, url_prefix='/api/transactions')
 
@@ -35,6 +36,7 @@ def approve_transaction_and_update_expense(transaction_id):
         return jsonify({'message': 'You are not authorized to approve this transaction'}), 403
 
     transaction.approved = True
+    transaction.status = "Approved"
     db.session.commit()
 
     # Find the  user expense
@@ -76,7 +78,11 @@ def get_approvals():
 @transaction_routes.route('/transactions-waiting-for-approval')
 @login_required
 def get_sent():
-    payments = Transaction.query.filter_by(sender_id=current_user.id, approved=False).all()
+    payments = Transaction.query.filter(
+        Transaction.sender_id == current_user.id,
+        Transaction.approved == False,
+        not_(Transaction.status == "Rejected")  # Exclude rejected transactions
+    ).all()
     payments_dicts = [payment.to_dict() for payment in payments]
     return jsonify(payments_dicts), 200
 
@@ -113,14 +119,27 @@ def delete_transaction(transaction_id):
     db.session.commit()
     return jsonify({'message': 'Transaction deleted'})
 
-@transaction_routes.route('/<int:transaction_id>/approve', methods=['POST'])
+# @transaction_routes.route('/<int:transaction_id>/approve', methods=['POST'])
+# @login_required
+# def approve_transaction(transaction_id):
+#     transaction = Transaction.query.get_or_404(transaction_id)
+#     transaction.approved = True
+#     transaction.status = "Approved"
+
+#     db.session.commit()
+#     return jsonify(transaction.to_dict())
+
+#reject this thing
+@transaction_routes.route('/<int:transaction_id>/reject', methods=['POST'])
 @login_required
-def approve_transaction(transaction_id):
+def reject_transaction(transaction_id):
     transaction = Transaction.query.get_or_404(transaction_id)
-    transaction.approved = True
+    transaction.approved = False
+    transaction.status = "Rejected"
 
     db.session.commit()
     return jsonify(transaction.to_dict())
+
 
 @transaction_routes.route('/user/<int:user_id>')
 @login_required

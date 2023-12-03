@@ -14,7 +14,7 @@ class Transaction(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     amount = db.Column(db.Integer)
     description = db.Column(db.Text)
-    status = db.Column(db.String)
+    status = db.Column(db.String, default="Pending")
     approved = db.Column(db.Boolean, default=False)
     type = db.Column(db.String)
     user_expense_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('user_expenses.id')))
@@ -27,7 +27,7 @@ class Transaction(db.Model):
     user_expense = db.relationship(
     'UserExpense',
     backref='related_transactions',
-    overlaps="transactions"  
+    overlaps="transactions"
 )
 
 
