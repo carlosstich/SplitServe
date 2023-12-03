@@ -14,7 +14,7 @@ function ExpenseSummary({ expense, currentUserExpense, otherUserExpense, handleS
       {expense.created_by === currentUserExpense.user_id && (
         <button onClick={handleSettleExpense}>Settle Up</button>
       )}
-      <div>Description: {expense.description}</div>
+      
     </div>
   );
 }

@@ -8,7 +8,7 @@ function AllBillTransactions({ userTransactions, handleOpenUpdateTransactionModa
         <div key={transaction.id} className="transaction">
           <div>Amount: ${transaction.amount.toFixed(2)}</div>
           <div>Description: {transaction.description}</div>
-          <div>Status: {transaction.approved ? 'Approved' : 'Pending'}</div>
+          <div>Status: {transaction.status}</div>
           {transaction.sender_id === userId && !transaction.approved && (
             <button onClick={() => handleOpenUpdateTransactionModal(transaction)}>
               Update Transaction
