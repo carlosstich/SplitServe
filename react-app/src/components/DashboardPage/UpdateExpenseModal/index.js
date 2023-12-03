@@ -12,7 +12,6 @@ function UpdateExpenseModal({ expense, closeModal }) {
         id: expense.id,
         total_amount: expense.total_amount,
         description: expense.description,
-        // Add other fields if necessary
     });
 
     const handleInputChange = (e) => {
@@ -35,6 +34,7 @@ function UpdateExpenseModal({ expense, closeModal }) {
                     value={expenseFormData.total_amount}
                     onChange={handleInputChange}
                     placeholder="Total Amount"
+                    disabled={true}
                 />
                 <input
                     type="text"
