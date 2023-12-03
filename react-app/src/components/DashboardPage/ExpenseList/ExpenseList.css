@@ -72,6 +72,7 @@
   font-size: 0.9rem;
   color: #333;
   margin-left: auto;
+  padding-right: 10px;
 }
 
 .delete-expense-button {
@@ -83,8 +84,23 @@
 }
 
 .settled-header {
-  background-color: #e7e7e7; /* Gray color */
+  background-color: #e7e7e7;
   padding: 10px 20px;
   font-weight: bold;
 }
 
+
+.update-expense-button {
+  padding: 5px 10px;
+  background-color: #48be9d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.update-expense-button:hover {
+  background-color: #3a9d7b; 
+}
