@@ -1,4 +1,3 @@
-/* Import Montserrat font */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
 
 body {
@@ -6,38 +5,36 @@ body {
   padding: 0;
 }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #48be9d;
-  font-family: 'Montserrat', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 0 3px rgba(0,0,0,0.5);
-}
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #48be9d;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+  }
 
-li {
+  .navbar li {
     float: left;
-}
+  }
 
-li a {
+  .navbar li a {
     display: block;
     color: white;
     text-align: center;
     padding: 8px 16px;
     text-decoration: none;
-}
+  }
 
-
-li.right {
+  .navbar li.right {
     float: right;
-}
+  }
 
-.sign-in-btn {
-    display: block;
+  .navbar .sign-in-btn {
     background-color: #04AA6D;
     color: white;
     padding: 8px 20px;
@@ -46,8 +43,8 @@ li.right {
     cursor: pointer;
     border-radius: 4px;
     text-decoration: none;
-}
+  }
 
-.sign-in-btn:hover {
+  .navbar .sign-in-btn:hover {
     background-color: #033;
-}
+  }
