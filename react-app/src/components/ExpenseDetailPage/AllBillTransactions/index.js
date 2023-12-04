@@ -9,11 +9,14 @@ function AllBillTransactions({ userTransactions, handleOpenUpdateTransactionModa
           <div>Amount: ${transaction.amount.toFixed(2)}</div>
           <div>Description: {transaction.description}</div>
           <div>Status: {transaction.status}</div>
-          {transaction.sender_id === userId && !transaction.approved && (
-            <button onClick={() => handleOpenUpdateTransactionModal(transaction)}>
-              Update Transaction
-            </button>
-          )}
+          {transaction.sender_id === userId && !transaction.approved && transaction.status !== "Rejected" && (
+  <button
+    onClick={() => handleOpenUpdateTransactionModal(transaction)}
+    className="update-expense-button">
+    Update Transaction
+  </button>
+)}
+
         </div>
       ))}
     </div>

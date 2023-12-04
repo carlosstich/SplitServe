@@ -97,9 +97,9 @@ function ExpenseList({ expenses }) {
                         </Link>
                         {expense.created_by === currentUserId && (
                             <>
-                                <button className="update-expense-button" onClick={() => handleUpdateClick(expense.id)}>
+                                {/* <button className="update-expense-button" onClick={() => handleUpdateClick(expense.id)}>
                                     Update
-                                </button>
+                                </button> */}
                                 <button className="delete-expense-button" onClick={() => handleDelete(expense.id)}>
                                     &times;
                                 </button>

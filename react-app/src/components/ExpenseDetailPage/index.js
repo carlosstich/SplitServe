@@ -104,8 +104,12 @@ function ExpenseDetailPage() {
   const handleApproveTransaction = (transactionId) => {
     dispatch(approveTransactionThunk(transactionId))
       .then(() => {
+        dispatch(getExpensesThunk());
+        dispatch(fetchUserExpensesForExpense(expenseId));
+        dispatch(fetchUsersForExpense(expenseId));
         dispatch(getTransactionsAwaitingApprovalThunk());
         dispatch(getTransactionsForExpenseThunk(expenseId));
+
       })
       .catch((error) => {
         console.error("Error in approving transaction:", error);
@@ -113,18 +117,25 @@ function ExpenseDetailPage() {
   };
 
   const handleSettleExpense = () => {
-    const updatedExpenseData = {
-      status: "Settled",
-    };
+    // Display confirmation dialog
+    const isConfirmed = window.confirm("Are you sure you want to settle this expense?");
 
-    dispatch(updateExpenseThunk(expenseId, updatedExpenseData))
-      .then(() => {
-        dispatch(getExpensesThunk());
-      })
-      .catch((error) => {
-        console.error("Error in settling expense:", error);
-      });
+
+    if (isConfirmed) {
+      const updatedExpenseData = {
+        status: "Settled",
+      };
+
+      dispatch(updateExpenseThunk(expenseId, updatedExpenseData))
+        .then(() => {
+          dispatch(getExpensesThunk());
+        })
+        .catch((error) => {
+          console.error("Error in settling expense:", error);
+        });
+    }
   };
+
 
   const handleRejectTransaction = (transactionId) => {
     dispatch(rejectTransactionThunk(transactionId))
@@ -174,12 +185,14 @@ function ExpenseDetailPage() {
         <div>Amount: ${transaction.amount}</div>
         <div>Transaction type: {transaction.type}</div>
         <div>Transaction note: {transaction.description}</div>
-        <button onClick={() => handleApproveTransaction(transaction.id)}>
-          Approve
-        </button>
-        <button onClick={() => handleRejectTransaction(transaction.id)} className="reject-transaction-button">
-      Reject
-    </button>
+        <button onClick={() => handleApproveTransaction(transaction.id)} className="update-expense-button">
+  Approve
+</button>
+
+<button onClick={() => handleRejectTransaction(transaction.id)} className="reject-transaction-button">
+  Reject
+</button>
+
       </div>
     ))}
   </div>
