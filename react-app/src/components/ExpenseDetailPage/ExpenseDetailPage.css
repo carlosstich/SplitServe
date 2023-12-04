@@ -1,67 +1,77 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: #f8f8f8;
+}
+
+.expense-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .expense-detail-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-  .transactions-awaiting-approval {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+.card h3 {
+  background-color: #e7e7e7;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
 
-  .transactions-awaiting-approval h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
+.transaction, .expense-summary div {
+  border-bottom: 1px solid #e7e7e7;
+  padding: 10px 0;
+  text-align: left;
+}
 
-  .transaction {
-    margin-bottom: 20px;
-  }
+.add-transaction-button {
+  background-color: #ff652f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+}
 
-  .user-transactions {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+.add-transaction-button:hover {
+  background-color: #e5612f;
+}
 
-  .user-transactions h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
+.transactions-awaiting-approval, .user-transactions, .expense-summary {
+  background-color: #e7e7e7; 
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
 
-  .expense-summary {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+@media (max-width: 768px) {
+  .expense-detail-header,
+  .expense-detail-container {
+    width: 95%;
+    margin: 20px auto;
   }
-
-  .expense-summary div {
-    margin-bottom: 10px;
-  }
-
-  .add-transaction-button {
-    background-color: #5cb85c;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    font-size: 16px;
-  }
-
-  .add-transaction-button:hover {
-    background-color: #4cae4c;
-  }
-
-  .expense-detail-container > div {
-    text-align: center;
-    width: 100%;
-  }
+}

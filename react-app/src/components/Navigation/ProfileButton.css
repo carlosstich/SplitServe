@@ -4,6 +4,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  padding: 20px
 }
 
 .profile-avatar {
@@ -23,7 +24,6 @@
 
 .profile-dropdown {
   position: absolute;
-  right: 0;
   background-color: white;
   border: 1px solid #e1e1e1;
   border-radius: 6px;

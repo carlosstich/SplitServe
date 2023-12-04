@@ -1,6 +1,41 @@
-.welcome-message {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 24px;
+.home-container {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    min-height: 100vh;
+    padding: 0 4em;
+    background-color: #f8f8f8;
+    font-family: 'Arial', sans-serif;
+}
 
+.text-container {
+    max-width: 50%;
+    text-align: left;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #4a4a4a;
+}
+
+p {
+    font-size: 1.5em;
+    color: #6a6a6a;
+}
+
+.sign-up-button {
+    background-color: #a25ea3;
+    color: white;
+    padding: 1em 2em;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 2em;
+}
+
+.house-image {
+    max-width: 50%;
+    height: auto;
+    filter: hue-rotate(250deg) brightness(0.9) saturate(1.2);
 }
