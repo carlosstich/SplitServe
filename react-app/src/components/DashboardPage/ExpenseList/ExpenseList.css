@@ -102,5 +102,28 @@
 }
 
 .update-expense-button:hover {
-  background-color: #3a9d7b; 
+  background-color: #3a9d7b;
+}
+
+.no-expense-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.splitwise-guy-image {
+  max-width: 100px;
+  margin-right: 20px;
+}
+
+.no-expense-text h2 {
+  font-size: 1.5em;
+  color: #333;
+}
+
+.no-expense-text p {
+  font-size: 1em;
+  color: #666;
 }

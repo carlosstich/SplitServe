@@ -44,13 +44,20 @@ function ExpenseList({ expenses }) {
         return (
             <div className="expense-list-container">
                 <div className="expense-list-header">
-                    <h1 className="expense-list-title">Demo's Expenses</h1>
-                    <button onClick={() => openModal(<CreateExpenseModal />)} className="create-expense-button">Add an Expense</button>
+                    <h1 className="expense-list-title">Dashboard</h1>
+                    <button onClick={() => openModal(<CreateExpenseModal />)} className="create-expense-button">Add an expense</button>
                 </div>
-                <p>No expenses found. Start by adding a new expense.</p>
+                <div className="no-expense-content">
+                    <img src="/images/splitwise_guy.png" alt="Splitwise guy" className="splitwise-guy-image" />
+                    <div className="no-expense-text">
+                        <h2>You’re all settled up. Awesome!</h2>
+                        <p>To add a new expense, click the orange “Add an expense” button.</p>
+                    </div>
+                </div>
             </div>
         );
     }
+
 
     return (
         <div className="expense-list-container">
