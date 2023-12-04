@@ -11,6 +11,7 @@ import {
   getTransactionsAwaitingApprovalThunk,
   getTransactionsForExpenseThunk,
   rejectTransactionThunk,
+  deleteTransactionThunk,
 } from "../../store/transactions";
 import "./ExpenseDetailPage.css";
 import UpdateTransactionModal from "../UpdateTransactionModal";
@@ -136,6 +137,19 @@ function ExpenseDetailPage() {
     }
   };
 
+  const handleDeleteTransaction = (transactionId) => {
+    if(window.confirm("Are you sure you want to delete this transaction?")) {
+      dispatch(deleteTransactionThunk(transactionId))
+        .then(() => {
+          refreshTransactions(); // Call a function to refresh the list of transactions
+        })
+        .catch((error) => {
+          console.error("Error in deleting transaction:", error);
+        });
+    }
+  };
+
+
 
   const handleRejectTransaction = (transactionId) => {
     dispatch(rejectTransactionThunk(transactionId))
@@ -203,6 +217,7 @@ function ExpenseDetailPage() {
       <AllBillTransactions
         userTransactions={userTransactions}
         handleOpenUpdateTransactionModal={handleOpenUpdateTransactionModal}
+        handleDeleteTransaction={handleDeleteTransaction}
         userId={userId}
       />
     </div>
