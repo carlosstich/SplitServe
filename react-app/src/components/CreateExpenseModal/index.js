@@ -75,6 +75,7 @@ function CreateExpenseModal() {
                         name="description"
                         value={expenseFormData.description}
                         onChange={handleInputChange}
+                        maxLength={25}
                     />
                 </div>
                 <div className="input-group">

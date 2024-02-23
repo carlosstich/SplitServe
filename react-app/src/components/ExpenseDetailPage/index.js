@@ -37,9 +37,6 @@ function ExpenseDetailPage() {
   const userTransactions = useSelector(
     (state) => state.transactions.userTransactions || []
   );
-  // console.log(transactionsAwaitingApproval)
-  // console.log(userExpenses)
-  // console.log(expenses)
 
   const expense = expenses.find((e) => e.id === parseInt(expenseId));
   const currentUserExpense = userExpenses.find(
@@ -49,7 +46,7 @@ function ExpenseDetailPage() {
     (expense) => expense.user_id !== userId
   );
 
-  // console.log(expense)
+
 
 
   const currentUserExpenseId = currentUserExpense?.expense_id;
@@ -59,10 +56,10 @@ function ExpenseDetailPage() {
       (transaction) => transaction.user_expense_id === currentUserExpenseId && transaction.status === "Pending"
     );
 
-    console.log(relevantTransactionsAwaitingApproval)
+    
 
-  // console.log(currentUserExpense);
-  // console.log(transactionsAwaitingApproval);
+
+
   const { openModal } = useModal();
 
   const refreshTransactions = () => {
